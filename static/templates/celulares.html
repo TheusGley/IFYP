@@ -1,0 +1,73 @@
+{% extends "header.html" %}
+{% block content %}
+
+
+<body class="font-sans antialiased text-gray-800 bg-gray-100">
+
+  
+    <main class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold text-center text-blue-800 mb-12">Nossos Smartphones</h1>
+
+        <div class="bg-white p-6 rounded-lg shadow-sm mb-8 flex flex-wrap justify-center md:justify-start items-center gap-4">
+        <form action="{% url 'filtros' %}" method="POST" class="w-full md:w-auto flex flex-col md:flex-row items-center gap-4">
+            {% csrf_token %}
+                <h3 class="font-semibold text-lg text-gray-700">Filtrar por:</h3>
+                <select name="marca" class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">Marca</option>
+                    <option value="samsung">Samsung</option>
+                    <option value="apple">Apple</option>
+                    <option value="xiaomi">Xiaomi</option>
+                    <option value="motorola">Motorola</option>
+                </select>
+                <select name= "preco" class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">Preço</option>
+                    <option value="500">De até R$500,00</option>
+                    <option value="1000">De até R$1000,00</option>
+                    <option value="1500">De até R$1500,00</option>
+                    <option value="2000">De até R$2000,00</option>
+                    <option value="3000">De até R$3000,00</option>
+                </select>
+                <select name="condicao" class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">Condição</option>
+                    <option value="Novo">Novo</option>
+                    <option value="Usado">Usado</option>
+                </select>
+                <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition duration-300">Aplicar Filtros</button>
+            </div>
+        </form>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            
+            {% for c  in celulares  %}
+                <div class="bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition duration-300">
+                <a href="{% url "cel" c.id %}"> <img src="{{c.imagem.url}}" alt="{{c.nome}}" class="w-full h-48 object-contain p-4 bg-gray-50">
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">{{c.nome}}</h3>
+                        <p class="text-sm text-gray-500 mb-2">{{c.marca}}</p>
+                        <div class="flex items-center mb-3">
+                            <span class="text-yellow-400">★★★★☆</span> <span class="text-gray-500 text-sm ml-2">({{c.avaliacao}} Avaliações)</span>
+                        </div>
+                        <span class="text-blue-600 font-bold text-xl">R$ {{c.valor}}</span>
+                    </div>
+                </a>
+                <div class="p-4 border-t border-gray-200">
+                    <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-md transition duration-300">Adicionar ao Carrinho</button>
+                </div>
+            </div>
+
+                {% endfor %}
+            
+     
+
+        </div> <div class="flex justify-center mt-12 space-x-2">
+            <a href="#" class="px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-700 hover:bg-gray-200">Anterior</a>
+            <a href="#" class="px-4 py-2 bg-blue-600 text-white rounded-md">1</a>
+            <a href="#" class="px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-700 hover:bg-gray-200">2</a>
+            <a href="#" class="px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-700 hover:bg-gray-200">3</a>
+            <a href="#" class="px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-700 hover:bg-gray-200">Próximo</a>
+        </div>
+
+    </main>
+    {% include "footer.html" %}
+
+</body>
+{% endblock %}

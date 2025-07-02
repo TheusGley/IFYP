@@ -1,0 +1,94 @@
+ {% extends "header.html" %}
+
+{% load static %}
+
+    {% block content %}
+    
+
+<body class="font-sans antialiased text-gray-800">
+
+
+    <section class="hero-bg bg-blue-600 text-white py-20 md:py-32 relative overflow-hidden">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-center relative z-10">
+            <div class="md:w-1/2 text-center md:text-left mb-10 md:mb-0">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6 animate-fade-in-down">
+                    Encontre seu Próximo Celular <br class="hidden md:inline">na <span class="text-yellow-300">PhoneStore</span>
+                </h1>
+                <p class="text-lg md:text-xl mb-8 opacity-90 animate-fade-in">
+                    As melhores ofertas em smartphones novos e usados, com garantia e entrega rápida.
+                </p>
+                <div class="space-x-4">
+                    <a href="{% url "celulares" %}" class="bg-yellow-400 hover:bg-yellow-500 text-blue-800 font-bold py-3 px-8 rounded-full transition duration-300 transform hover:scale-105 inline-block">
+                        Comprar Agora
+                    </a>
+                    <a href="{% url "login" %}" class="border-2 border-white text-white hover:bg-white hover:text-blue-600 font-bold py-3 px-8 rounded-full transition duration-300 transform hover:scale-105 inline-block">
+                        Vender Meu Celular
+                    </a>
+                </div>
+            </div>
+            <div class="md:w-1/2 flex justify-center animate-fade-in-up">
+               <a href="{% url "cel" celular_mais_visualizado.id %}"> <img src="{{celular_mais_visualizado.imagem.url}}" alt="Smartphone em destaque" class="max-w-xs md:max-w-sm lg:max-w-md xl:max-w-lg object-contain drop-shadow-2xl rounded"> </a>
+            </div>
+        </div>
+        <div class="absolute inset-0 z-0 opacity-10">
+            <svg class="w-full h-full" viewBox="0 0 1440 810" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="200" cy="100" r="150" fill="currentColor" class="text-blue-400 opacity-50"/>
+                <circle cx="1200" cy="700" r="180" fill="currentColor" class="text-blue-700 opacity-50"/>
+                <circle cx="700" cy="400" r="120" fill="currentColor" class="text-blue-500 opacity-50"/>
+            </svg>
+        </div>
+    </section>
+
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-10">Modelos Populares</h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% for c in celulares_destaque|slice:"1:4" %}
+                
+                <div class="bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition duration-300">
+                    <img src="{{c.imagem.url}}" alt="Smartphone Modelo X" class="w-full h-48 object-contain p-4 bg-gray-100">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">{{c.nome}}</h3>
+                        <p class="text-gray-600 mb-4">{{c.bv_desc}}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-blue-600 font-bold text-2xl">R$ {{c.valor}}</span>
+                            <a href="{% url "cel" c.id %}" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-full">Ver Detalhes</a>
+                        </div>
+                    </div>
+                </div>
+
+                {% endfor %}
+            <div class="text-center mt-12">
+                <a href="{% url "celulares" %}" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full transition duration-300">
+                    Ver Todas as Ofertas
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-10">Por Que Escolher a PhoneStore?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div class="p-6 bg-gray-100 rounded-lg shadow-sm">
+                    <svg class="w-12 h-12 mx-auto mb-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.001 12.001 0 002.944 12c.045 4.397 3.393 8.04 7.822 8.618m4.016-5.618A11.955 11.955 0 0121.056 12c-.045-4.397-3.393-8.04-7.822-8.618m-5.618 5.618l.846.846m-1.707 1.707l.846.846m-.846-.846l.846.846M9.364 5.636l.846.846m-1.707 1.707l.846.846m-.846-.846l.846.846"></path></svg>
+                    <h3 class="text-xl font-semibold mb-2">Garantia e Segurança</h3>
+                    <p class="text-gray-600">Compre com total tranquilidade. Todos os celulares têm garantia e passam por rigorosa inspeção.</p>
+                </div>
+                <div class="p-6 bg-gray-100 rounded-lg shadow-sm">
+                    <svg class="w-12 h-12 mx-auto mb-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2-1.343-2-3-2zM9 14c0 1.657-1.343 3-3 3H3.6c-1.042 0-1.707-1.058-1.707-2.105V9.45C1.893 8.24 2.85 7.155 4.095 7.026L6 7.18c.57.06.918.59.818 1.157L6.68 11.45c-.2.95.536 1.84 1.5 1.84h3.62c.964 0 1.7-1.08 1.5-2.03L12.422 9.07c-.1-.567.247-1.097.818-1.157L18.905 7.026c1.245.129 2.202 1.214 2.202 2.414v5.445c0 1.047-.665 2.105-1.707 2.105H18c-1.657 0-3-.895-3-2V8z"></path></svg>
+                    <h3 class="text-xl font-semibold mb-2">Melhores Preços</h3>
+                    <p class="text-gray-600">Encontre as melhores ofertas do mercado, tanto para celulares novos quanto usados.</p>
+                </div>
+                <div class="p-6 bg-gray-100 rounded-lg shadow-sm">
+                    <svg class="w-12 h-12 mx-auto mb-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    <h3 class="text-xl font-semibold mb-2">Entrega Rápida</h3>
+                    <p class="text-gray-600">Receba seu novo celular no conforto da sua casa, com agilidade e segurança.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% include "footer.html" %}
+
+    {% endblock %}

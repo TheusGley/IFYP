@@ -1,0 +1,95 @@
+<style>
+.main-footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1.5em; /* Um pouco mais de padding para destaque */
+    width: 100%;
+    /* Posição fixa no rodapé da viewport */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    /* Move o footer para fora da tela por padrão */
+    transform: translateY(100%);
+    transition: transform 0.3s ease-out; /* Adiciona uma transição suave */
+    z-index: 999; /* Garante que fique acima de outros elementos */
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.2); /* Sombra para dar profundidade */
+}
+
+.main-footer.show {
+    transform: translateY(0); /* Move o footer para dentro da tela */
+}
+
+/* Para garantir que o conteúdo não fique por baixo do footer quando ele aparece */
+body {
+    padding-bottom: 0; /* Remova qualquer padding-bottom fixo aqui, será gerado pelo JS */
+    min-height: 100vh; /* Garante que o body ocupe pelo menos a altura da tela */
+    display: flex; /* Para ajudar a empurrar o footer para baixo */
+    flex-direction: column; /* Para alinhar o conteúdo e footer em coluna */
+}
+
+main {
+    flex-grow: 1; /* Garante que o conteúdo principal ocupe o espaço restante */
+}
+</style>
+
+    </main>
+
+    <footer class="main-footer">
+        <div class="container mx-auto px-4 text-center text-sm">
+            <p>&copy; 2025 PhoneStore. Todos os direitos reservados.</p>
+            <div class="flex justify-center space-x-6 mt-4">
+                <a href="#" class="text-gray-400 hover:text-white">Política de Privacidade</a>
+                <a href="#" class="text-gray-400 hover:text-white">Termos de Uso</a>
+                <a href="#" class="text-gray-400 hover:text-white">FAQ</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Função para ajustar o padding-bottom do body para o footer
+        function adjustBodyPadding() {
+            const footer = document.querySelector('.main-footer');
+            if (footer) {
+                // Define um padding no body igual à altura do footer + uma pequena margem
+                document.body.style.paddingBottom = footer.offsetHeight + 20 + 'px'; // 20px de margem
+            }
+        }
+
+        // Função para mostrar ou esconder o footer
+        function toggleFooterVisibility() {
+            const footer = document.querySelector('.main-footer');
+            if (!footer) return; // Garante que o footer existe
+
+            // Calcula o quanto o usuário rolou
+            const scrollY = window.scrollY;
+            // Calcula a altura total da página (documento)
+            const documentHeight = document.documentElement.scrollHeight;
+            // Calcula a altura da viewport
+            const viewportHeight = window.innerHeight;
+
+            // Se a soma do scrollY e da altura da viewport for maior ou igual à altura do documento,
+            // significa que o usuário chegou ao final da página.
+            if (scrollY + viewportHeight >= documentHeight - 50) { // -50px para dar uma margem antes de chegar no fim exato
+                footer.classList.add('show');
+            } else {
+                footer.classList.remove('show');
+            }
+        }
+
+        // Ajusta o padding-bottom do body assim que o DOM é carregado
+        document.addEventListener('DOMContentLoaded', () => {
+            adjustBodyPadding();
+            toggleFooterVisibility(); // Verifica a visibilidade na carga inicial
+        });
+
+        // Adiciona um listener para o evento de scroll
+        window.addEventListener('scroll', toggleFooterVisibility);
+
+        // Adiciona um listener para o redimensionamento da janela, caso o tamanho do footer mude
+        window.addEventListener('resize', () => {
+            adjustBodyPadding();
+            toggleFooterVisibility(); // Reajusta visibilidade após redimensionar
+        });
+    </script>
+</body>
