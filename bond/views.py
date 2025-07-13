@@ -3,6 +3,7 @@ from django.db import IntegrityError
 
 from django.contrib.auth import authenticate, login,logout
 from .models import *
+from .forms import *
 
 def homeView(request):
     
@@ -138,6 +139,7 @@ def logoutView(request):
 def painelView(request):
     anuncios = Anuncio.objects.filter(usuario=request.user)
     
+
     
     context = {
         'anuncios': anuncios,
@@ -146,6 +148,73 @@ def painelView(request):
     return render(request, 'painel.html',context )
 
 
+def anuncioView(request):
+
+    if request.method == 'POST':
+        usuario = request.user
+        nome = request.POST.get('nome')
+        ram = request.POST.get('ram')
+        camera = request.POST.get('camera')
+        armazenamento = request.POST.get('armazenamento')
+        bateria = request.POST.get('bateria')
+        bv_desc = request.POST.get('bv_desc')
+        descricao = request.POST.get('descricao')
+        imagens = request.FILES.getlist('imagens') 
+        marca = request.POST.get('marca')
+        condicao = request.POST.get('condicao')
+        valor = request.POST.get('valor')
+
+        # Criando o anúncio corretamente
+        anuncio = Anuncio.objects.create(
+            usuario=usuario,
+            nome=nome,
+            bv_desc=bv_desc,
+            descricao=descricao,
+            armazenamento=armazenamento,
+            meomoria=ram,
+            camera=camera,
+            bateria=bateria,
+            marca=marca,
+            condicao=condicao,
+            valor=valor
+        )
+
+    # Criando todas as imagens relacionadas ao anúncio
+        for imagem in imagens:
+            ImagemAnuncio.objects.create(
+                anuncio=anuncio,
+                imagem=imagem
+            )
+
+        return redirect('painel')
+
+    context = {
+
+    }
+    return render (request, 'publicar-anuncio.html', context)
+
+
+
+
+def editarView(request,id ):
+    if request.method == 'POST':
+        form = AnuncioForm(request.POST)
+        imagens = request.FILES.getlist('novas_imagens')
+
+        if form.is_valid():
+            anuncio = form.save(commit=False)
+            anuncio.usuario = request.user
+            anuncio.save()
+
+            for imagem in imagens:
+                ImagemAnuncio.objects.create(anuncio=anuncio, imagem=imagem)
+
+            return redirect('painel')
+
+    else:
+        form = AnuncioForm()
+
+    return render(request, 'editar-anuncio.html', {'form': form, 'id':id})
 
 
 def celUnicoView(request, id):

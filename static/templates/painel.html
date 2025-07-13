@@ -13,7 +13,7 @@
                 <p class="text-lg opacity-90">Gerencie seus produtos à venda e acompanhe suas atividades.</p>
             </div>
             <div class="mt-6 md:mt-0 space-y-4 md:space-y-0 md:space-x-4 flex flex-col md:flex-row">
-                <a href="adicionar_anuncio.html" class="bg-yellow-400 hover:bg-yellow-500 text-blue-800 font-bold py-3 px-6 rounded-full transition duration-300 text-center">
+                <a href="{% url "pubAnuncio" %}" class="bg-yellow-400 hover:bg-yellow-500 text-blue-800 font-bold py-3 px-6 rounded-full transition duration-300 text-center">
                     + Anunciar Novo Celular
                 </a>
                 <a href="meus_pedidos.html" class="border-2 border-white text-white hover:bg-white hover:text-blue-600 font-bold py-3 px-6 rounded-full transition duration-300 text-center">
@@ -26,26 +26,35 @@
             <h2 class="text-3xl font-bold text-blue-800 mb-8">Meus Anúncios Ativos (<span id="total-anuncios">{{anuncios.count}}</span>)</h2>
 
 
-            {% for a in anuncios  %}
+      {% for a in anuncios %}
             <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6 flex flex-col sm:flex-row items-center p-4">
-                <img src="{{a.imagem.url}}" alt="a.{{nome}}" class="w-full sm:w-48 h-32 object-contain mr-4 mb-4 sm:mb-0">
+                {% with a.imagens.first as imagem %}
+                    {% if imagem %}
+                        <img src="{{ imagem.imagem.url }}" alt="{{ a.nome }}" class="w-full sm:w-48 h-32 object-contain mr-4 mb-4 sm:mb-0">
+                    {% else %}
+                        <div class="w-full sm:w-48 h-32 flex items-center justify-center bg-gray-100 text-gray-400 mr-4 mb-4 sm:mb-0">
+                            Sem imagem
+                        </div>
+                    {% endif %}
+                {% endwith %}
+                
                 <div class="flex-grow text-center sm:text-left">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-1">{{a.nome}}</h3>
-                    <p class="text-sm text-gray-500 mb-2">{{a.bv_desc}}</p>
-                    <p class="text-blue-600 font-bold text-2xl">R$ {{a.valor}}</p>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-1">{{ a.nome }}</h3>
+                    <p class="text-sm text-gray-500 mb-2">{{ a.bv_desc }}</p>
+                    <p class="text-blue-600 font-bold text-2xl">R$ {{ a.valor }}</p>
                     <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded-full mt-2">Disponível</span>
                 </div>
+
                 <div class="mt-4 sm:mt-0 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
-                    <button class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-md transition duration-300">
+                    <a href="{% url 'editar' a.id %}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-md transition duration-300">
                         Editar
-                    </button>
-                    <button class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300">
+                    </a>
+                    <a class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300">
                         Excluir
-                    </button>
+                    </a>
                 </div>
             </div>
-
-            {% endfor %}
+        {% endfor %}
 
                 <div class="mt-4 sm:mt-0 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
                     <button class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-md transition duration-300 cursor-not-allowed" disabled>

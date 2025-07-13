@@ -17,6 +17,8 @@ urlpatterns = [
     path("celulares", celularesView, name="celulares"),
     path("suporte", suporteView, name="suporte"),
     path("servicos", servicosView, name="servicos"),
+    path("editar-anuncio\<id>", editarView, name="editar"),
+    path("publicar-anuncio", anuncioView, name="pubAnuncio"),
     
     
 ]

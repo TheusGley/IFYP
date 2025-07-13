@@ -22,35 +22,41 @@ class Credito(models.Model):
     
     
 class Anuncio(models.Model):
-        condicoes = {
+        condicoes = [
           (  'Novo','Novo'),
           (  'Seminovo','Seminovo'),  
           (  'Usado','Usado'),  
-        }
+        ]
         
-        marcas = {
+        marcas = [
     ('Samsung', 'Samsung'),
     ('Apple', 'Apple'),
     ('Xiaomi', 'Xiaomi'), # Grande crescimento e popularidade global
-}
+        ]
         
         usuario = models.ForeignKey(User,on_delete=models.CASCADE)
         nome = models.CharField(max_length=40)
         bv_desc = models.CharField(max_length=60)
+        memoria = models.CharField(max_length=60)
+        camera = models.CharField(max_length=60)
+        bateria = models.CharField(max_length=60)
+        armazenamento = models.CharField(max_length=60)
         descricao = models.CharField(max_length=300)
-        imagem = models.ImageField( upload_to='imagens_produtos', height_field=None, width_field=None, max_length=None, blank=True, null=True)
+        # imagem = models.ImageField( upload_to='imagens_produtos', height_field=None, width_field=None, max_length=None, blank=True, null=True)
         data_adicionada = models.DateField(auto_now=True)
-        marca = models.CharField(choices=marcas, max_length=20, default=' ')
+        marca = models.CharField(choices=marcas, max_length=20, )
         condicao = models.CharField(choices=condicoes, max_length=20, default='Novo')
         valor = models.DecimalField(max_digits=8, decimal_places=2, null=False, blank=False)
         visualizacao = models.PositiveIntegerField(default=0) 
         vendas = models.PositiveIntegerField(default=0) 
-        avaliacao_anuncio= models.CharField(max_length=2)
-        
+        avaliacao_anuncio = models.PositiveSmallIntegerField(default=0)        
         
         def __str__(self):
             return self.nome
 
+class ImagemAnuncio(models.Model):
+    anuncio = models.ForeignKey(Anuncio, on_delete=models.CASCADE, related_name='imagens')
+    imagem = models.ImageField(upload_to='imagens_produtos/')
         
 class Confiabilidade (models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
