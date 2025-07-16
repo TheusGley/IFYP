@@ -1,257 +1,96 @@
 {% extends "header.html" %}
 {% load widget_tweaks %} 
 
-<style>
-        /* Estilos adicionais para visualização de imagem */
-        .image-preview-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-        .image-preview-item {
-            position: relative;
-            width: 100px;
-            height: 100px;
-            border: 1px solid #e2e8f0; /* gray-200 */
-            border-radius: 0.5rem; /* rounded-md */
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #f8fafc; /* gray-50 */
-        }
-        .image-preview-item img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-        .image-preview-item .remove-btn {
-            position: absolute;
-            top: 0.25rem;
-            right: 0.25rem;
-            background-color: #ef4444; /* red-500 */
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            cursor: pointer;
-            line-height: 1;
-            padding-bottom: 2px; /* Ajuste fino para o 'x' */
-        }
-    </style>
-</head>
+
 
 {% block content %}
-
 <body class="font-sans antialiased text-gray-800 bg-gray-100">
-    <main class="container mx-auto px-4 py-8">
-        <h1 class="text-4xl font-bold text-center text-blue-800 mb-10">Editar Anúncio</h1>
-        <p class="text-center text-gray-600 mb-8">Atualize os detalhes do seu anúncio para manter tudo correto.</p>
+<main class="container mx-auto px-4 py-8">
+    <h1 class="text-4xl font-bold text-center text-blue-800 mb-10">Editar Anúncio</h1>
+    <p class="text-center text-gray-600 mb-8">Atualize os detalhes do seu anúncio para manter tudo correto.</p>
 
-        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-2xl mx-auto">
+    <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-2xl mx-auto">
+        <form method="post" enctype="multipart/form-data" class="space-y-6" action="{% url 'editar' id %}">
+            {% csrf_token %}
 
-            <form method="post" enctype="multipart/form-data" class="space-y-6" action="{% url "editar" id %}">
-                {% csrf_token %}
-    
-                <label for="Titulo" class="block text-sm font-medium text-gray-700 mb-1">Titulo do Anuncio </label>                    </label>
-                {% comment %} {{ form.nome|add_class:"w-full border p-2"|attr:"placeholder:Ex: {{ anuncio.nome }}" }} {% endcomment %}
+            <label for="Titulo" class="block text-sm font-medium text-gray-700 mb-1">Título do Anúncio</label>
+            {{ form.nome|add_class:"w-full border p-2"|attr:"placeholder:Ex: iPhone X"|attr:"id:Titulo" }}
 
-                {% with "Ex: " | add:anuncio.nome as placeholder_val %}
-                     {{ form.nome|add_class:"w-full border p-2" | attr:"placeholder:"|add:placeholder_val }}
-                {% endwith %}
+            <label for="modelo" class="block text-sm font-medium text-gray-700 mb-1">Modelo do Celular</label>
+            {{ form.bv_desc|add_class:"w-full border p-2"|attr:"placeholder:Ex: Galaxy S10"|attr:"id:modelo" }}
 
-                <label for="modelo" class="block text-sm font-medium text-gray-700 mb-1">Modelo do Celular</label>                    
-                {{ form.bv_desc|add_class:"w-full border p-2"|attr:"placeholder:Ex: 8Gb"|attr:"name:modelo"|attr:"id:modelo"}} 
+            <label for="camera" class="block text-sm font-medium text-gray-700 mb-1">Resolução da Câmera</label>
+            {{ form.camera|add_class:"w-full border p-2"|attr:"placeholder:Ex: 38MP"|attr:"id:camera" }}
 
-                <label for="camera" class="block text-sm font-medium text-gray-700 mb-1">Resolução de Camera</label>                    
-                {{ form.camera|add_class:"w-full border p-2"|attr:"placeholder:Ex: 38Mp"|attr:"name:camera"|attr:"id:camera"}} 
+            <label for="memoria" class="block text-sm font-medium text-gray-700 mb-1">Quantidade de Memoria RAM</label>
+            {{ form.memoria|add_class:"w-full border p-2"|attr:"placeholder:Ex: 4"|attr:"id:memoria" }}
 
-                <label for="armazenamento" class="block text-sm font-medium text-gray-700 mb-1">Quantidade de armazenamento </label>                    </label>
-                {{ form.armazenamento|add_class:"w-full border p-2"|attr:"placeholder:Ex: 8Gb"|attr:"name:armazenamento"|attr:"id:armazenamento"}} 
+            <label for="armazenamento" class="block text-sm font-medium text-gray-700 mb-1">Armazenamento</label>
+            {{ form.armazenamento|add_class:"w-full border p-2"|attr:"placeholder:Ex: 128GB"|attr:"id:armazenamento" }}
 
-                <label for="bateria" class="block text-sm font-medium text-gray-700 mb-1">Porcentagem de Bateria </label>                    </label>
-                {{ form.bateria|add_class:"w-full border p-2"|attr:"placeholder:Ex: 50"|attr:"name:bateria"|attr:"id:bateria"}} 
+            <label for="bateria" class="block text-sm font-medium text-gray-700 mb-1">Porcentagem da Bateria</label>
+            {{ form.bateria|add_class:"w-full border p-2"|attr:"placeholder:Ex: 90%"|attr:"id:bateria" }}
 
-                <label for="descricao" class="block text-sm font-medium text-gray-700 mb-1">Descrição </label>                    </label>
-                {{ form.descricao|add_class:"w-full border p-2"|attr:"placeholder:Ex: "|attr:"name:descricao"|attr:"id:descricao"}} 
+            <label for="descricao" class="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
+            {{ form.descricao|add_class:"w-full border p-2"|attr:"placeholder:Ex: Ótimo estado, sem marcas"|attr:"id:descricao" }}
 
-                <label for="marca" class="block text-sm font-medium text-gray-700 mb-1">Marca</label>                    </label>
-                {{ form.marca|add_class:"w-full border p-2"|attr:"placeholder:Ex: 8Gb"|attr:"name:memoria"|attr:"id:memoria"}} 
+            <label for="marca" class="block text-sm font-medium text-gray-700 mb-1">Marca</label>
+            {{ form.marca|add_class:"w-full border p-2"|attr:"placeholder:Ex: Samsung"|attr:"id:marca" }}
 
-                <label for="condicao" class="block text-sm font-medium text-gray-700 mb-1">Condição </label>                    </label>
-                {{ form.condicao|add_class:"w-full border p-2"|attr:"placeholder:Ex: 8Gb"|attr:"name:condicao"|attr:"id:condicao"}} 
+            <label for="condicao" class="block text-sm font-medium text-gray-700 mb-1">Condição</label>
+            {{ form.condicao|add_class:"w-full border p-2"|attr:"placeholder:Ex: Usado"|attr:"id:condicao" }}
 
-                <label for="valor" class="block text-sm font-medium text-gray-700 mb-1">Valor do aparelho </label>                    </label>
-                {{ form.valor|add_class:"w-full border p-2"|attr:"placeholder:Ex: 8Gb"|attr:"name:valoe"|attr:"id:valor"}} 
+            <label for="valor" class="block text-sm font-medium text-gray-700 mb-1">Valor</label>
+            {{ form.valor|add_class:"w-full border p-2"|attr:"placeholder:Ex: R$ 1.200"|attr:"id:valor" }}
 
+            <!-- Botão para abrir modal -->
+            <div class="mt-4">
+                <a onclick="document.getElementById('modalUpload').classList.remove('hidden')" 
+                   class="cursor-pointer inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Adicionar Imagens
+                </a>
+            </div>
 
-                {% if form.novas_imagens %}
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Novas Imagens (até 5)</label>
-                        {{ form.novas_imagens }}
-                        {% if form.novas_imagens.errors %}
-                            <p class="text-red-500 text-sm mt-1">{{ form.novas_imagens.errors.0 }}</p>
-                        {% endif %}
+            <!-- Modal -->
+            <div id="modalUpload" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
+                <div class="bg-white w-full max-w-md mx-auto rounded-lg shadow-lg p-6 relative">
+                    <h2 class="text-2xl font-semibold mb-4">Enviar Imagens</h2>
+
+                    <div class="mb-4 space-y-2">
+                        <label class="block text-gray-700">Selecione até 4 imagens:</label>
+
+                        {% for i in "1234" %}
+                        <input type="file" name="imagem{{ i }}" id="imagem{{ i }}" accept="image/*"
+                               class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-500">
+                        {% endfor %}
                     </div>
-                {% endif %}
 
-                <button type="submit" class="w-60 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition duration-300">
+                    <div class="flex justify-end space-x-2">
+                        <button type="button" onclick="document.getElementById('modalUpload').classList.add('hidden')" 
+                                class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+                            Confirmar
+                        </button>
+                        <button type="button" onclick="document.getElementById('modalUpload').classList.add('hidden')" 
+                                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ações -->
+            <div class="flex flex-wrap gap-4 mt-6">
+                <button type="submit"
+                        class="w-full md:w-60 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition duration-300">
                     Atualizar Anúncio
-                </button>  
-                <a href="{% url "painel" %}" class="w-50 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md transition duration-300">
+                </button>
+                <a href="{% url 'painel' %}"
+                   class="w-full md:w-40 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md transition duration-300 text-center">
                     Cancelar
                 </a>
-            </form>
-        </div>
-    </main>
+            </div>
+        </form>
+    </div>
+</main>
 </body>
-
 {% endblock %}
-
-
-    <script>
-        // --- Lógica do Preview de Imagens (novas imagens) ---
-        const newImageInput = document.getElementById('new_images');
-        const newImagePreviewContainer = document.getElementById('new-image-preview-container');
-        let selectedNewFiles = []; // Para armazenar os NOVOS arquivos selecionados
-
-        newImageInput.addEventListener('change', function(event) {
-            const files = Array.from(event.target.files);
-            
-            // Filtra apenas os novos arquivos para adicionar
-            const uniqueNewFiles = files.filter(file => !selectedNewFiles.some(sf => sf.name === file.name && sf.size === file.size));
-            selectedNewFiles = [...selectedNewFiles, ...uniqueNewFiles].slice(0, 5); // Limita a 5 NOVOS arquivos
-
-            updateNewImagePreviews();
-            // Limpa o input file para que o mesmo arquivo possa ser selecionado novamente (se for o caso)
-            newImageInput.value = '';
-        });
-
-        function updateNewImagePreviews() {
-            newImagePreviewContainer.innerHTML = ''; // Limpa os previews existentes
-
-            selectedNewFiles.forEach((file, index) => {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const previewItem = document.createElement('div');
-                    previewItem.classList.add('image-preview-item');
-                    previewItem.innerHTML = `
-                        <img src="${e.target.result}" alt="Preview">
-                        <span class="remove-btn" data-index="${index}">x</span>
-                    `;
-                    newImagePreviewContainer.appendChild(previewItem);
-                };
-                reader.readAsDataURL(file);
-            });
-
-            // Adiciona listener para os botões de remover novas imagens
-            newImagePreviewContainer.querySelectorAll('.remove-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const indexToRemove = parseInt(this.dataset.index);
-                    selectedNewFiles.splice(indexToRemove, 1);
-                    updateNewImagePreviews(); // Atualiza a exibição após remover
-                });
-            });
-        }
-
-        // --- Lógica para Remover Imagens Existentes (requer interação com Django/backend) ---
-        // Aqui você precisaria de uma lógica JavaScript que, ao clicar no 'x' de uma imagem existente,
-        // enviasse uma requisição DELETE (ou POST com ação de delete) para o backend do Django
-        // para remover a imagem do banco de dados e da pasta de uploads.
-        // Por enquanto, vamos simular a remoção visualmente.
-
-        const existingImageContainer = document.getElementById('existing-image-preview-container');
-        existingImageContainer.querySelectorAll('.remove-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const imageId = this.dataset.imageId; // ID da imagem no seu banco de dados
-                if (confirm(`Tem certeza que deseja remover esta imagem?`)) {
-                    // Aqui você faria uma requisição AJAX para o Django, por exemplo:
-                    /*
-                    fetch(`/api/anuncio-imagem/${imageId}/remover/`, {
-                        method: 'POST', // Ou DELETE, dependendo da sua API
-                        headers: {
-                            'X-CSRFToken': '{{ csrf_token }}', // Se estiver usando CSRF
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ 'image_id': imageId })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            this.closest('.image-preview-item').remove();
-                            alert('Imagem removida com sucesso!');
-                        } else {
-                            alert('Erro ao remover imagem: ' + data.error);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Erro na requisição:', error);
-                        alert('Erro na comunicação com o servidor.');
-                    });
-                    */
-                    // Para fins de demonstração no frontend, apenas removemos visualmente:
-                    this.closest('.image-preview-item').remove();
-                    alert('Imagem removida visualmente (requer backend para remover de fato)!');
-                }
-            });
-        });
-
-
-        // --- Lógica do Carrinho (reutilizada) ---
-        function getCart() {
-            const cart = localStorage.getItem('shoppingCart');
-            return cart ? JSON.parse(cart) : [];
-        }
-
-        function updateCartIcon() {
-            const cart = getCart();
-            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-            const cartCountElement = document.querySelector('.cart-count');
-            if (cartCountElement) {
-                cartCountElement.textContent = totalItems;
-                cartCountElement.style.display = totalItems > 0 ? 'inline-block' : 'none';
-            }
-        }
-
-        // --- Lógica do Footer (reutilizada) ---
-        function adjustBodyPadding() {
-            const footer = document.querySelector('.main-footer');
-            if (footer) {
-                document.body.style.paddingBottom = footer.offsetHeight + 20 + 'px';
-            }
-        }
-
-        function toggleFooterVisibility() {
-            const footer = document.querySelector('.main-footer');
-            if (!footer) return;
-
-            const scrollY = window.scrollY;
-            const documentHeight = document.documentElement.scrollHeight;
-            const viewportHeight = window.innerHeight;
-
-            if (scrollY + viewportHeight >= documentHeight - 50) {
-                footer.classList.add('show');
-            } else {
-                footer.classList.remove('show');
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            updateCartIcon(); // Atualiza o contador do carrinho
-            adjustBodyPadding(); // Ajusta o padding para o footer
-            toggleFooterVisibility(); // Verifica visibilidade do footer
-        });
-
-        window.addEventListener('scroll', toggleFooterVisibility);
-        window.addEventListener('resize', () => {
-            adjustBodyPadding();
-            toggleFooterVisibility();
-        });
-    </script>
-</body>
-</html>

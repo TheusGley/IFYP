@@ -12,6 +12,7 @@ urlpatterns = [
     path("filtros", filtrosView, name="filtros"),
     path("login", loginView, name="login"),
     path("logout", logoutView, name="logout"),
+    path("cadastro", cadastroView, name="cadastro"),
     path("painel-controle", painelView, name="painel"),
     path("cel/<id>", celUnicoView, name="cel"),
     path("celulares", celularesView, name="celulares"),
