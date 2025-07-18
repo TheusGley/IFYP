@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.db import IntegrityError
-
+from django.shortcuts import get_object_or_404
 from django.contrib.auth import authenticate, login,logout
 from .models import *
 from .forms import *
@@ -196,25 +196,48 @@ def anuncioView(request):
 
 
 
-def editarView(request,id ):
-    if request.method == 'POST':
-        form = AnuncioForm(request.POST)
-        imagens = request.FILES.getlist('novas_imagens')
+def editarView(request, id):
+    anuncio = get_object_or_404(Anuncio, id=id)
+    imagens_anteriores = ImagemAnuncio.objects.filter(anuncio=anuncio)
 
+    if request.method == 'POST':
+        form = AnuncioForm(request.POST, instance=anuncio)
+        
+        imagens = [
+            request.FILES.get('imagem1'),
+            request.FILES.get('imagem2'),
+            request.FILES.get('imagem3'),
+            request.FILES.get('imagem4'),
+        ]
+        print(form.is_valid())
         if form.is_valid():
             anuncio = form.save(commit=False)
             anuncio.usuario = request.user
             anuncio.save()
 
-            for imagem in imagens:
-                ImagemAnuncio.objects.create(anuncio=anuncio, imagem=imagem)
+            # Substitui imagens somente se novas foram enviadas
+            if any(imagem for imagem in imagens if imagem):
+                # Apaga imagens antigas
+                for img in imagens_anteriores:
+                    img.imagem.delete(save=False)
+                    img.delete()
+                
+                # Salva novas imagens
+                for imagem in imagens:
+                    if imagem:
+                        ImagemAnuncio.objects.create(anuncio=anuncio, imagem=imagem)
 
             return redirect('painel')
-
+        elif  not form.is_valid():
+            print(form.errors) 
     else:
-        form = AnuncioForm()
+        form = AnuncioForm(instance=anuncio)
 
-    return render(request, 'editar-anuncio.html', {'form': form, 'id':id})
+    return render(request, 'editar-anuncio.html', {
+        'form': form,
+        'anuncio': anuncio,
+        'id': id,
+    })
 
 
 def celUnicoView(request, id):
@@ -238,10 +261,10 @@ def celUnicoView(request, id):
     return render(request, 'celUnico.html', context )
 
 def celularesView(request):
-    celulares = Anuncio.objects.all()    
+    anuncios = Anuncio.objects.prefetch_related('imagens').all()
     
     context = {
-        'celulares': celulares,
+        'celulares': anuncios,
     }
     return render(request, 'celulares.html',context )
 

@@ -27,12 +27,12 @@ class AnuncioForm(forms.ModelForm):
             'armazenamento': forms.NumberInput(attrs={
                 'placeholder': 'Ex: 128, 256, 512',
                 'class': 'block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200',
-                'min': '16'
             }),
             'bateria': forms.NumberInput(attrs={
                 'placeholder': 'Ex: 4000, 5000',
                 'class': 'block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200',
-                'min': '500'
+                'min': '1'
+                
             }),
             'bv_desc': forms.TextInput(attrs={
                 'placeholder': 'Ex: Novo, Lacrado, com NF.',
@@ -56,4 +56,7 @@ class AnuncioForm(forms.ModelForm):
             }),
 
         }
-   
+        
+def clean_nome(self):
+        nome = self.cleaned_data.get('nome', '')
+        return nome.strip().strip('"').strip("'")  # remove aspas e espaço
