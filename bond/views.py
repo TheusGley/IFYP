@@ -9,10 +9,15 @@ from django.contrib import messages
 def homeView(request):
     
     celulares_destaque = Anuncio.objects.filter(visualizacao__gte=100)
-    celular_mais_visualizado = Anuncio.objects.order_by('-visualizacao').first()
+    celulares_visualizados = Anuncio.objects.filter(visualizacao__gte=100)
+    celular_mais_visualizado = celulares_visualizados.order_by('-visualizacao').first()
+    imagem = ImagemAnuncio.objects.filter(anuncio=celular_mais_visualizado)
+    
     context= {
-        'celulares_destaque': celulares_destaque,
+        'imagem': imagem.first(),
         'celular_mais_visualizado': celular_mais_visualizado,
+        'celulares_destaque':celulares_destaque
+        
     }
     return render(request, 'home.html', context)
 
@@ -28,7 +33,6 @@ def pesquisaView(request ):
         error_message = "Nenhum termo de pesquisa fornecido."
         anuncios = Anuncio.objects.none()  
 
-    print(f"Consulta: {query}")
     context = {
         'celulares': anuncios,
         'query': query,
@@ -78,7 +82,8 @@ def filtrosView(request ):
         error_message=None
     else:
         redirect('celulares')
-    
+        anuncios = Anuncio.objects.all()
+        error_message=None
     context={
         'celulares': anuncios,
         'error_message': error_message,
@@ -326,7 +331,13 @@ def celularesView(request):
 
 def suporteView(request):
     
-    return render(request, 'suporte.html', )
+    perguntas = PerguntasFrequentes.objects.all()
+    
+    context = {
+        "perguntas": perguntas,
+    }
+    
+    return render(request, 'suporte.html', context )
 
 
 def servicosView(request):

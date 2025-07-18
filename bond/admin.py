@@ -9,5 +9,6 @@ admin.site.register(Carrinho)
 admin.site.register(Produto_Carrinho)
 admin.site.register(Avaliacao)
 admin.site.register(ImagemAnuncio)
+admin.site.register(PerguntasFrequentes)
 
 

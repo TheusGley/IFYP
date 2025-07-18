@@ -58,6 +58,14 @@ class ImagemAnuncio(models.Model):
     anuncio = models.ForeignKey(Anuncio, on_delete=models.CASCADE, related_name='imagens')
     imagem = models.ImageField(upload_to='imagens_produtos/')
         
+        
+class  PerguntasFrequentes(models.Model):
+    pergunta = models.CharField(max_length=200)
+    respostas = models.CharField(max_length=500)
+    
+    def  __str__(self):
+        return self.pergunta
+    
 class Confiabilidade (models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
     data_membro = models.DateField(auto_now=True,blank=True)
