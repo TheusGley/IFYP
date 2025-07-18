@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth import authenticate, login,logout
 from .models import *
 from .forms import *
+from django.contrib import messages
 
 def homeView(request):
     
@@ -128,6 +129,58 @@ def loginView(request):
     
     return render(request, 'login.html', )
 
+
+def cadastroView(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone') # Campo de telefone adicionado
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+
+        # --- Validações ---
+        if not all([username, email, phone, password, confirm_password]):
+            messages.error(request, "Por favor, preencha todos os campos.")
+            return render(request, 'cadastro.html', {'error_message': "Por favor, preencha todos os campos."})
+
+        if password != confirm_password:
+            messages.error(request, "As senhas não coincidem.")
+            return render(request, 'cadastro.html', {'error_message': "As senhas não coincidem."})
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Nome de usuário já existe. Escolha outro.")
+            return render(request, 'cadastro.html', {'error_message': "Nome de usuário já existe. Escolha outro."})
+
+        if User.objects.filter(email=email).exists():
+            messages.error(request, "Este email já está cadastrado.")
+            return render(request, 'cadastro.html', {'error_message': "Este email já está cadastrado."})
+
+        # Adicione validações de senha mais complexas aqui se necessário (ex: comprimento mínimo, caracteres especiais)
+        if len(password) < 6: # Exemplo de validação de comprimento mínimo
+            messages.error(request, "A senha deve ter no mínimo 6 caracteres.")
+            return render(request, 'cadastro.html', {'error_message': "A senha deve ter no mínimo 6 caracteres."})
+            
+        # Você pode adicionar uma validação básica para o formato do telefone, se quiser.
+        # Ex: import re; if not re.match(r'^\(\d{2}\)\s\d{4,5}-\d{4}$', phone): ...
+
+        try:
+            # --- Criação do Usuário ---
+            user = User.objects.create_user(username=username, email=email, password=password)
+            # Se você tiver um CustomUser model e/ou campos extras como 'phone',
+            # você precisará salvá-los após a criação do usuário base.
+            # Ex: user.phone = phone
+            #     user.save()
+            
+            messages.success(request, "Sua conta foi criada com sucesso! Faça login para continuar.")
+            return redirect('login') # Redireciona para a página de login
+            
+        except Exception as e:
+            messages.error(request, f"Ocorreu um erro ao criar a conta: {e}")
+            return render(request, 'cadastro.html', {'error_message': f"Ocorreu um erro ao criar a conta: {e}"})
+
+    return render(request, 'cadastro.html')
+    
+
 def logoutView(request):
     logout(request)
     
@@ -244,19 +297,21 @@ def celUnicoView(request, id):
     
     try: 
         celular_unico = Anuncio.objects.get(id=id)
+        imagens  = ImagemAnuncio.objects.filter(anuncio=celular_unico)
         celular_unico.visualizacao += 1
         celular_unico.save()
         error_message = ""
-        
         
     except Anuncio.DoesNotExist:
         error_message = 'Celular não encontrado.'
         celular_unico= None
         
+
     
     context = {
         'error_message': error_message,
         'celular_unico': celular_unico,
+        'imagens':imagens,
     }
     return render(request, 'celUnico.html', context )
 
@@ -267,7 +322,6 @@ def celularesView(request):
         'celulares': anuncios,
     }
     return render(request, 'celulares.html',context )
-
 
 
 def suporteView(request):
